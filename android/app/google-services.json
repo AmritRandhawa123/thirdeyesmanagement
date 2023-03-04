@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "928858622040",
+    "project_id": "rdeyesmanagement",
+    "storage_bucket": "rdeyesmanagement.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:928858622040:android:5893f1ae67889379bce22d",
+        "android_client_info": {
+          "package_name": "com.thirdeyesmanagement.thirdeyesmanagement"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "928858622040-uitnseo7laqp87vbb7us8tapcqv5bcdd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.thirdeyesmanagement.thirdeyesmanagement",
+            "certificate_hash": "e136470df9eb00be906a21573216610ec20b883a"
+          }
+        },
+        {
+          "client_id": "928858622040-nq3q3hnp1ts96719cni5er19k2boof10.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA0wbpQqHrvuTcV23VD-O4mreztc5HWNKo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "928858622040-nq3q3hnp1ts96719cni5er19k2boof10.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
