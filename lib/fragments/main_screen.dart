@@ -128,7 +128,7 @@ class _MainScreenState extends State<MainScreen> {
           pendingAmount: _serverData["pendingAmount"],
           pendingMassage: _serverData["pendingMassage"],
           registration: _serverData["registration"],
-          pastServices: [documentSnapshot.get("pastServices")],
+          pastServices: _serverData["pastServices"],
 
         ),));
 

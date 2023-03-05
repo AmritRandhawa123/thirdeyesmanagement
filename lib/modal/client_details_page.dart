@@ -77,7 +77,7 @@ class _ClientAddDetailsState extends State<ClientAddDetails> {
                   ],
                 )),
           ),
-          widget.pastServices.isNotEmpty ?
+          widget.pastServices.isEmpty ? Container() :
           Padding(
             padding: const EdgeInsets.all(10.0),
             child: ListView.separated(
@@ -97,7 +97,9 @@ class _ClientAddDetailsState extends State<ClientAddDetails> {
               shrinkWrap: true,
               physics: const ClampingScrollPhysics(),
             ),
-          ) : Container()
+          )
+
+
         ],
       ),
     ));

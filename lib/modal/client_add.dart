@@ -251,7 +251,7 @@ class _ClientAddState extends State<ClientAdd> {
         .collection("clients")
         .doc(numberController.value.text)
         .get()
-        .then((value) {
+        .then((value) async {
       if (value.exists) {
         showDialog(
             context: context,
@@ -267,11 +267,13 @@ class _ClientAddState extends State<ClientAdd> {
                   ],
                 ));
       } else {
+        await FirebaseFirestore.instance.enableNetwork();
         Timestamp timestamp = Timestamp.now();
         _server
             .collection("clients")
             .doc(numberController.value.text.toString())
             .set({
+
           "name": nameController.value.text.toString(),
           "age": int.parse(_age.round().toString()),
           "phone": numberController.value.text.toString(),
@@ -283,15 +285,17 @@ class _ClientAddState extends State<ClientAdd> {
           "pastServices" : []
         }, SetOptions(merge: true)).then((value) => {
                   showDialog(
+                    barrierDismissible: false,
                       context: context,
                       builder: (ctx) => AlertDialog(
+
                             title: const Text("Package Created"),
                             content: const Text(
                                 "Would like to Book Session? or Go Back?."),
                             actions: [
                               TextButton(
                                   onPressed: () {
-                                    Navigator.pop(context);
+                                  goBack();
                                   },
                                   child: const Text("Go Back")),
                               TextButton(onPressed: (){
@@ -310,5 +314,9 @@ class _ClientAddState extends State<ClientAdd> {
         pendingAmountKey.currentState!.validate()) {
       _createDatabase();
     }
+  }
+  void goBack(){
+    Navigator.pop(context);
+    Navigator.pop(context);
   }
 }
