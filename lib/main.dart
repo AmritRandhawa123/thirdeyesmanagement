@@ -46,7 +46,6 @@ class MyAppState extends State<MyApp> {
        await userStateSave();
       }
     } on FirebaseAuthException catch (e) {
-      print(e.code);
       if(e.code == "user-disabled"){
         // Navigator.of(context).pushReplacement(MaterialPageRoute(
         //   builder: (context) => const UserDisabled(),

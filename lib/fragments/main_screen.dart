@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'package:thirdeyesmanagement/modal/client_add.dart';
 import 'package:thirdeyesmanagement/modal/client_details_page.dart';
 
@@ -101,8 +100,8 @@ class _MainScreenState extends State<MainScreen> {
               onPressed: () {
                 if (searchKey.currentState!.validate()) {
                   loading = true;
-                  String data = searchController.value.text;
-                  _searchClient("+91$data");
+                  String data = searchController.value.text.toString();
+                  _searchClient(data);
                 }
               },
               child: const Text("Search")),
@@ -113,22 +112,24 @@ class _MainScreenState extends State<MainScreen> {
 
   Future<void> _searchClient(String query) async {
     await FirebaseFirestore.instance
-        .collection('Clients')
+        .collection('clients')
         .doc(query)
         .get()
         .then((DocumentSnapshot documentSnapshot) {
       if (documentSnapshot.exists) {
+
         _serverData = documentSnapshot.data();
         Navigator.push(context, MaterialPageRoute(builder: (context) => ClientAddDetails(
-          activeStatus: _serverData["activeStatus"],
-          age: _serverData["age"],
-          balancePending: _serverData["balancePending"],
+          phoneNumber: _serverData["phone"],
           name: _serverData["name"],
-          paid: _serverData["paid"],
+          age: _serverData["age"],
+          amount: _serverData["amount"],
+          massages: _serverData["massages"],
+          pendingAmount: _serverData["pendingAmount"],
           pendingMassage: _serverData["pendingMassage"],
-          phoneNumber: _serverData["phoneNumber"],
-          plan: _serverData["plan"],
-          services: [_serverData["services"]],
+          registration: _serverData["registration"],
+          pastServices: [documentSnapshot.get("pastServices")],
+
         ),));
 
       } else {
