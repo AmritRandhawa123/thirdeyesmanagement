@@ -19,7 +19,7 @@ class _MainScreenState extends State<MainScreen> {
   final GlobalKey<FormState> searchKey = GlobalKey<FormState>();
  final db = FirebaseFirestore.instance;
   bool loading = false;
-  late dynamic _serverData;
+
 @override
   void initState() {
     super.initState();
@@ -52,7 +52,7 @@ class _MainScreenState extends State<MainScreen> {
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontFamily: "Montserrat",
-                  color: Colors.black54,
+                  color: Colors.black87,
                   fontSize: 24)),
         ),
         const Padding(
@@ -99,14 +99,18 @@ class _MainScreenState extends State<MainScreen> {
             ),
           ),
         ),
-        Center(
+        const SizedBox(height: 5,),
+             loading ?   const Center(child: CircularProgressIndicator()) : Container(),
+                const SizedBox(height: 5,),
+                Center(
           child: CupertinoButton(
               color: Colors.green,
               onPressed: () {
                 if (searchKey.currentState!.validate()) {
+                  setState(() {
                   loading = true;
-                  String data = searchController.value.text.toString();
-                  _searchClient(data);
+                  });
+                  _searchClient(searchController.value.text.toString());
                 }
               },
               child: const Text("Search")),
@@ -120,19 +124,22 @@ class _MainScreenState extends State<MainScreen> {
         .collection('clients')
         .doc(query)
         .get()
-        .then((DocumentSnapshot documentSnapshot) {
+        .then((DocumentSnapshot documentSnapshot)  {
       if (documentSnapshot.exists) {
+        setState(() {
+          loading = false;
+        });
 
-        Navigator.push(context, MaterialPageRoute(builder: (context) => ClientAddDetails(
-          phoneNumber: _serverData["phone"],
-          name: _serverData["name"],
-          age: _serverData["age"],
-          amount: _serverData["amount"],
-          massages: _serverData["massages"],
-          pendingAmount: _serverData["pendingAmount"],
-          pendingMassage: _serverData["pendingMassage"],
-          registration: _serverData["registration"],
-          pastServices: _serverData["pastServices"],
+       Navigator.push(context, MaterialPageRoute(builder: (context) => ClientAddDetails(
+          phoneNumber: documentSnapshot["phone"],
+          name: documentSnapshot.get("name"),
+          age: documentSnapshot.get("age"),
+          amount: documentSnapshot.get("amount"),
+          massages: documentSnapshot.get("massages"),
+          pendingAmount: documentSnapshot.get("pendingAmount"),
+          pendingMassage: documentSnapshot.get("pendingMassage"),
+          registration: documentSnapshot.get("registration"),
+          pastServices: documentSnapshot.get("pastServices"),
 
         ),));
 
@@ -151,6 +158,10 @@ class _MainScreenState extends State<MainScreen> {
                         child: const Text("Ok"))
                   ],
                 ));
+        setState(() {
+          loading = false;
+        });
+
       }
     });
   }

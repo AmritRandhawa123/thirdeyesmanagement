@@ -238,7 +238,10 @@ class _ClientAddState extends State<ClientAdd> {
                         check();
                       }
                     },
-              child: const Text("Create"))
+              child: const Text("Create")),
+          const SizedBox(
+            height: 15,
+          )
         ]),
       ),
     );
@@ -280,8 +283,9 @@ class _ClientAddState extends State<ClientAdd> {
           "registration":
               DateFormat.yMMMd().add_jm().format(timestamp.toDate()),
           "amount": int.parse(amountController.value.text.toString()),
-          "massages": double.parse(massagesController.value.text.toString()),
-          "pendingAmount": int.parse(pendingAmountController.value.text.toString()),
+          "massages": int.parse(massagesController.value.text.toString()),
+          "pendingAmount":
+              int.parse(pendingAmountController.value.text.toString()),
           "pendingMassage": int.parse(massagesController.value.text.toString()),
           "pastServices": []
         }, SetOptions(merge: true)).then((value) => {
@@ -305,7 +309,8 @@ class _ClientAddState extends State<ClientAdd> {
                                       builder: (context) => BookSession(
                                         number: numberController.value.text
                                             .toString(),
-                                        clientName: nameController.value.text.toString(),
+                                        clientName: nameController.value.text
+                                            .toString(),
                                       ),
                                     ));
                                   },

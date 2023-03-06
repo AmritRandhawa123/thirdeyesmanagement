@@ -1,5 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import 'book_session.dart';
 
 class ClientAddDetails extends StatefulWidget {
   const ClientAddDetails(
@@ -16,12 +19,12 @@ class ClientAddDetails extends StatefulWidget {
       : super(key: key);
   final String name;
   final int age;
-  final int massages;
+  final double massages;
   final int pendingAmount;
   final int pendingMassage;
   final int amount;
   final String phoneNumber;
-  final Timestamp registration;
+  final String registration;
   final List<dynamic> pastServices;
 
 
@@ -97,7 +100,13 @@ class _ClientAddDetailsState extends State<ClientAddDetails> {
               shrinkWrap: true,
               physics: const ClampingScrollPhysics(),
             ),
-          )
+          ),
+          CupertinoButton(
+            color: CupertinoColors.systemGreen,
+            onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => BookSession(number: widget.phoneNumber, clientName: widget.name,),));
+          },
+          child: const Text("Book Session"),)
 
 
         ],

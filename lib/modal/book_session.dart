@@ -35,17 +35,17 @@ class _BookSessionState extends State<BookSession> {
         child: SafeArea(
           child: Column(
             children: [
-              const SizedBox(height: 10),
-              const Text("Booking Manager"),
-              Center(child: Text(manager)),
-
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
                 children:  [
-                  const Text("Booking creating for"),
+                  const Text("Hello,",),
+                  const SizedBox(height: 10),
                   Text(widget.clientName,style: const TextStyle(fontSize: 22,fontFamily: "Dosis"),)
                 ],
-              )
+              ),
+              const SizedBox(height: 10),
+              const Text("Your booking manager"),
+              Center(child: Text(manager,style: const TextStyle(fontSize: 20,fontWeight: FontWeight.bold),)),
 
             ],
           ),
@@ -61,9 +61,10 @@ class _BookSessionState extends State<BookSession> {
       "pastServices": FieldValue.arrayUnion([
         {
           "spaName": spaName,
-          "massage": "massage",
+          "massage": massage,
           "duration": duration,
-          "Date":   DateFormat.yMMMd().add_jm().format(timestamp.toDate())
+          "Date":   DateFormat.yMMMd().add_jm().format(timestamp.toDate()),
+          "manager" : manager
         }
       ]),
     });
