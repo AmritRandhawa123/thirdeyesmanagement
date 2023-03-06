@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:thirdeyesmanagement/modal/book_session.dart';
 
 class ClientAdd extends StatefulWidget {
@@ -273,34 +274,42 @@ class _ClientAddState extends State<ClientAdd> {
             .collection("clients")
             .doc(numberController.value.text.toString())
             .set({
-
-          "name": nameController.value.text.toString(),
+          "name": nameController.value.text.toString().trim(),
           "age": int.parse(_age.round().toString()),
           "phone": numberController.value.text.toString(),
-          "registration": timestamp.toDate(),
-          "amount": int.parse(amountController.value.text.toString()) ,
-          "massages": int.parse(massagesController.value.text.toString()),
+          "registration":
+              DateFormat.yMMMd().add_jm().format(timestamp.toDate()),
+          "amount": int.parse(amountController.value.text.toString()),
+          "massages": double.parse(massagesController.value.text.toString()),
           "pendingAmount": int.parse(pendingAmountController.value.text.toString()),
           "pendingMassage": int.parse(massagesController.value.text.toString()),
-          "pastServices" : []
+          "pastServices": []
         }, SetOptions(merge: true)).then((value) => {
                   showDialog(
-                    barrierDismissible: false,
+                      barrierDismissible: false,
                       context: context,
                       builder: (ctx) => AlertDialog(
-
                             title: const Text("Package Created"),
                             content: const Text(
                                 "Would like to Book Session? or Go Back?."),
                             actions: [
                               TextButton(
                                   onPressed: () {
-                                  goBack();
+                                    goBack();
                                   },
                                   child: const Text("Go Back")),
-                              TextButton(onPressed: (){
-                                Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const BookSession(),));
-                              }, child: const Text("Book Session"))
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context)
+                                        .pushReplacement(MaterialPageRoute(
+                                      builder: (context) => BookSession(
+                                        number: numberController.value.text
+                                            .toString(),
+                                        clientName: nameController.value.text.toString(),
+                                      ),
+                                    ));
+                                  },
+                                  child: const Text("Book Session"))
                             ],
                           ))
                 });
@@ -315,7 +324,8 @@ class _ClientAddState extends State<ClientAdd> {
       _createDatabase();
     }
   }
-  void goBack(){
+
+  void goBack() {
     Navigator.pop(context);
     Navigator.pop(context);
   }

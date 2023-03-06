@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:thirdeyesmanagement/modal/client_add.dart';
 import 'package:thirdeyesmanagement/modal/client_details_page.dart';
 
+import '../modal/book_session.dart';
+
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
 
@@ -15,10 +17,13 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   final searchController = TextEditingController();
   final GlobalKey<FormState> searchKey = GlobalKey<FormState>();
-
+ final db = FirebaseFirestore.instance;
   bool loading = false;
   late dynamic _serverData;
-
+@override
+  void initState() {
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +34,7 @@ class _MainScreenState extends State<MainScreen> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const ClientAdd(),
+                builder: (context) =>  const ClientAdd(),
               ));
         },
         child: const Icon(Icons.people, color: Colors.white),
@@ -111,14 +116,13 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Future<void> _searchClient(String query) async {
-    await FirebaseFirestore.instance
+    await db
         .collection('clients')
         .doc(query)
         .get()
         .then((DocumentSnapshot documentSnapshot) {
       if (documentSnapshot.exists) {
 
-        _serverData = documentSnapshot.data();
         Navigator.push(context, MaterialPageRoute(builder: (context) => ClientAddDetails(
           phoneNumber: _serverData["phone"],
           name: _serverData["name"],

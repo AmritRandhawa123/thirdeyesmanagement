@@ -1,43 +1,71 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class BookSession extends StatefulWidget {
-  const BookSession({Key? key}) : super(key: key);
+  final String number;
+  final String clientName;
+
+  const BookSession({super.key, required this.number, required this.clientName});
 
   @override
   State<BookSession> createState() => _BookSessionState();
 }
 
 class _BookSessionState extends State<BookSession> {
- String manager =  FirebaseAuth.instance.currentUser!.email.toString();
+  String manager = FirebaseAuth.instance.currentUser!.email.toString();
+  final db = FirebaseFirestore.instance;
+
   @override
   void initState() {
-bookSession();
     super.initState();
   }
+
+  @override
+  void dispose() {
+    db.terminate();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Column(
-      children:  [
-        const Text("Booking by"),
-        Center(child: Text(manager)),
-      ],
-    ),);
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: SafeArea(
+          child: Column(
+            children: [
+              const SizedBox(height: 10),
+              const Text("Booking Manager"),
+              Center(child: Text(manager)),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children:  [
+                  const Text("Booking creating for"),
+                  Text(widget.clientName,style: const TextStyle(fontSize: 22,fontFamily: "Dosis"),)
+                ],
+              )
+
+            ],
+          ),
+        ),
+      ),
+    );
   }
-}
 
-Future<void> _createDatabase() async {
-
-  Map<String,dynamic> data;
-
-  FirebaseFirestore.instance.collection("clients").doc("9971953116").set({
-data.map((key, value) => ){
-
-    }
-    "pastServices" :
-
-  }, SetOptions(merge: true)).then((value) => {
-
-  });
+  Future<void> createBooking(String clientNumber,String spaName, String massage, double duration) async {
+    await FirebaseFirestore.instance.enableNetwork();
+    Timestamp timestamp = Timestamp.now();
+    FirebaseFirestore.instance.collection("clients").doc(clientNumber).update({
+      "pastServices": FieldValue.arrayUnion([
+        {
+          "spaName": spaName,
+          "massage": "massage",
+          "duration": duration,
+          "Date":   DateFormat.yMMMd().add_jm().format(timestamp.toDate())
+        }
+      ]),
+    });
+  }
 }
