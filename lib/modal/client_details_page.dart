@@ -56,7 +56,13 @@ class _ClientAddDetailsState extends State<ClientAddDetails> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text("Name"),
+                            Row(
+                              children: const [
+                                Text("Welcome,"),
+                            SizedBox(width: 10),
+                                Text("Name",style: TextStyle(fontSize: 22,fontWeight: FontWeight.w700)),
+                              ],
+                            ),
                             Text(widget.name,
                                 style: const TextStyle(
                                     fontSize: 32,

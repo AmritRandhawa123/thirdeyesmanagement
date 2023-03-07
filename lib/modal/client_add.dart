@@ -278,7 +278,7 @@ class _ClientAddState extends State<ClientAdd> {
                   actions: [
                     TextButton(
                         onPressed: () {
-                          Navigator.pop(context);
+                          Navigator.pop(ctx);
                         },
                         child: const Text("Ok"))
                   ],
@@ -314,12 +314,14 @@ class _ClientAddState extends State<ClientAdd> {
                             actions: [
                               TextButton(
                                   onPressed: () {
-                                    goBack();
+                                   Navigator.pop(ctx);
+                                   Navigator.pop(context);
+
                                   },
                                   child: const Text("Go Back")),
                               TextButton(
                                   onPressed: () {
-                                    Navigator.of(context)
+                                    Navigator.of(ctx)
                                         .pushReplacement(MaterialPageRoute(
                                       builder: (context) => BookSession(
                                           number: numberController.value.text
@@ -347,8 +349,5 @@ class _ClientAddState extends State<ClientAdd> {
     }
   }
 
-  void goBack() {
-    Navigator.pop(context);
-    Navigator.pop(context);
-  }
+
 }

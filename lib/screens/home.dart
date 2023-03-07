@@ -335,7 +335,7 @@ class HomePageState extends State<HomePage> {
               actions: [
                 TextButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      Navigator.pop(ctx);
                     },
                     child: const Text("Ok"))
               ],
