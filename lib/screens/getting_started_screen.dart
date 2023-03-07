@@ -101,19 +101,22 @@ class GettingStartedScreenState extends State<GettingStartedScreen> {
               : Row(
             mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CupertinoButton(
-                      onPressed: () async {
-                        userStateSave();
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (context) => const Decision(),
-                        ));
-                      },
-                      color: Colors.redAccent,
-                      child: const Text(
-                        "Let's Start",
-                        style: TextStyle(color: Colors.white, fontSize: 16),
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: CupertinoButton(
+                        onPressed: () async {
+                          userStateSave();
+                          Navigator.of(context).pushReplacement(MaterialPageRoute(
+                            builder: (context) => const Decision(),
+                          ));
+                        },
+                        color: Colors.redAccent,
+                        child: const Text(
+                          "Let's Start",
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
                       ),
-                    ),
+                  ),
                 ],
               )),
     );

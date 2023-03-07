@@ -119,6 +119,7 @@ class _DecisionState extends State<Decision> {
                           ),
                         ],
                       ),
+
                       loading
                           ? const CircularProgressIndicator(
                         color: Colors.blueAccent,
@@ -126,6 +127,7 @@ class _DecisionState extends State<Decision> {
                           : Container(
                         height: 20,
                       ),
+                      const SizedBox(height: 5),
                       CupertinoButton(
                           color: Colors.blueAccent,
                           onPressed: loading
@@ -137,16 +139,17 @@ class _DecisionState extends State<Decision> {
                               style: TextStyle(
                                   color: Colors.white))),
                       const SizedBox(
-                        height: 50,
+                        height: 80,
                       ),
-                      const Text("Forget Password?"),
-                      const SizedBox(height: 5),
-                      TextButton(
+                      const Text("Forget you password? Don't worry",style: TextStyle(color: Colors.black54)),
+                      const SizedBox(height: 10),
+                      CupertinoButton(
+                        color: Colors.red,
                           onPressed: () {
                             Navigator.push(context, MaterialPageRoute(
                               builder: (context) => const PasswordReset(),));
-                          }, child: const Text("Reset here"))
-                    ],
+                          }, child: const Text("Reset",style: TextStyle(fontFamily: "Montserrat",color: Colors.white),)
+                      )],
                   ));
             },
           ),
@@ -184,7 +187,7 @@ class _DecisionState extends State<Decision> {
             context: context,
             builder: (ctx) =>
                 AlertDialog(
-                  title: const Text("Wrong Password"),
+                  title: const Text("Wrong Password",style: TextStyle(color: Colors.red)),
                   content: const Text("Would like to reset?"),
                   actions: <Widget>[
                     TextButton(
@@ -196,12 +199,12 @@ class _DecisionState extends State<Decision> {
                                 builder: (context) => const PasswordReset(),
                               ));
                         },
-                        child: const Text("Reset")),
+                        child: const Text("Reset",style: TextStyle(color: Colors.red),)),
                     TextButton(
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        child: const Text("Try again"))
+                        child: const Text("Try again",style: TextStyle(color: Colors.green),))
                   ],
                 ));
       } else if (e.code == "too-many-requests") {

@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:thirdeyesmanagement/screens/decision.dart';
@@ -32,8 +31,28 @@ class MyAppState extends State<MyApp> {
         (_) => Future.delayed(const Duration(seconds: 2), () {
               userState();
             }));
-    return const Scaffold(
-      body: Center(child: CircularProgressIndicator(color: CupertinoColors.systemGreen,)),
+    return Scaffold(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+              height: MediaQuery.of(context).size.height / 5,
+              width: MediaQuery.of(context).size.width / 3,
+              child: Center(
+                child: Image.asset(
+                  "assets/logo.png",
+                ),
+              )),
+          const SizedBox(
+            height: 20,
+          ),
+           const Center(
+            child: CircularProgressIndicator(
+              color: Color(0xFFe09d31),
+            ),
+          ),
+        ],
+      ),
     ); // widget tree
   }
 
@@ -43,15 +62,14 @@ class MyAppState extends State<MyApp> {
       if (FirebaseAuth.instance.currentUser != null) {
         moveToHome();
       } else {
-       await userStateSave();
+        await userStateSave();
       }
     } on FirebaseAuthException catch (e) {
-      if(e.code == "user-disabled"){
+      if (e.code == "user-disabled") {
         // Navigator.of(context).pushReplacement(MaterialPageRoute(
         //   builder: (context) => const UserDisabled(),
         // ));
       }
-
     }
   }
 
@@ -60,18 +78,18 @@ class MyAppState extends State<MyApp> {
       builder: (context) => const Decision(),
     ));
   }
+
   moveToGettingStart() {
     Navigator.of(context).pushReplacement(MaterialPageRoute(
       builder: (context) => const GettingStartedScreen(),
     ));
   }
 
-
   Future<void> userStateSave() async {
     final value = await SharedPreferences.getInstance();
     if (value.getInt("userState") != 1) {
-moveToGettingStart();    }
-    else{
+      moveToGettingStart();
+    } else {
       moveToDecision();
     }
   }

@@ -40,7 +40,10 @@ class _PasswordResetState extends State<PasswordReset> {
               ],
             ),
           ),
-          Flexible(child: Image.asset("assets/slider3.png")),
+          Flexible(child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Image.asset("assets/slider3.png"),
+          )),
           Form(
             key: _emailKey,
             child: Padding(

@@ -17,13 +17,14 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   final searchController = TextEditingController();
   final GlobalKey<FormState> searchKey = GlobalKey<FormState>();
- final db = FirebaseFirestore.instance;
+  final db = FirebaseFirestore.instance;
   bool loading = false;
 
-@override
+  @override
   void initState() {
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,11 +32,7 @@ class _MainScreenState extends State<MainScreen> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: CupertinoColors.systemGreen,
         onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>  const ClientAdd(),
-              ));
+
         },
         child: const Icon(Icons.people, color: Colors.white),
       ),
@@ -71,7 +68,7 @@ class _MainScreenState extends State<MainScreen> {
         Form(
           key: searchKey,
           child: Padding(
-            padding: const EdgeInsets.all(10.0),
+            padding: const EdgeInsets.all(30.0),
             child: TextFormField(
               maxLength: 10,
               keyboardType: TextInputType.number,
@@ -87,8 +84,9 @@ class _MainScreenState extends State<MainScreen> {
                 }
               },
               decoration: InputDecoration(
+                counterText: "",
                   filled: true,
-                  hintText: "Search Clients",
+                  hintText: "Search Registered Clients",
                   prefixIcon:
                       const Icon(Icons.search, color: Colors.black54, size: 20),
                   fillColor: Colors.white,
@@ -99,21 +97,51 @@ class _MainScreenState extends State<MainScreen> {
             ),
           ),
         ),
-        const SizedBox(height: 5,),
-             loading ?   const Center(child: CircularProgressIndicator()) : Container(),
-                const SizedBox(height: 5,),
-                Center(
+        const SizedBox(
+          height: 5,
+        ),
+        loading
+            ? const Center(child: CircularProgressIndicator())
+            : Container(),
+        const SizedBox(
+          height: 5,
+        ),
+        Center(
           child: CupertinoButton(
               color: Colors.green,
               onPressed: () {
                 if (searchKey.currentState!.validate()) {
                   setState(() {
-                  loading = true;
+                    loading = true;
                   });
                   _searchClient(searchController.value.text.toString());
                 }
               },
               child: const Text("Search")),
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        Center(
+          child: CupertinoButton(
+              color: Colors.deepPurple,
+              onPressed: () {},
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width/2,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                  Icon(
+                    Icons.directions_walk,
+                    color: Colors.white,
+                  ),
+                  SizedBox(width: 10,),
+                  Text(
+                    "Walk-in Client",
+                    style: TextStyle(color: Colors.white),
+                  )
+                ]),
+              )),
         )
       ])),
     );
@@ -124,30 +152,33 @@ class _MainScreenState extends State<MainScreen> {
         .collection('clients')
         .doc(query)
         .get()
-        .then((DocumentSnapshot documentSnapshot)  {
+        .then((DocumentSnapshot documentSnapshot) {
       if (documentSnapshot.exists) {
         setState(() {
           loading = false;
         });
 
-       Navigator.push(context, MaterialPageRoute(builder: (context) => ClientAddDetails(
-          phoneNumber: documentSnapshot["phone"],
-          name: documentSnapshot.get("name"),
-          age: documentSnapshot.get("age"),
-          amount: documentSnapshot.get("amount"),
-          massages: documentSnapshot.get("massages"),
-          pendingAmount: documentSnapshot.get("pendingAmount"),
-          pendingMassage: documentSnapshot.get("pendingMassage"),
-          registration: documentSnapshot.get("registration"),
-          pastServices: documentSnapshot.get("pastServices"),
-
-        ),));
-
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ClientAddDetails(
+                phoneNumber: documentSnapshot["phone"],
+                name: documentSnapshot.get("name"),
+                age: documentSnapshot.get("age"),
+                amount: documentSnapshot.get("amount"),
+                massages: documentSnapshot.get("massages"),
+                pendingAmount: documentSnapshot.get("pendingAmount"),
+                pendingMassage: documentSnapshot.get("pendingMassage"),
+                registration: documentSnapshot.get("registration"),
+                pastServices: documentSnapshot.get("pastServices"),
+              ),
+            ));
       } else {
         showDialog(
             context: context,
             builder: (ctx) => AlertDialog(
-                  title: const Text("No Client Found",style: TextStyle(color: Colors.red)),
+                  title: const Text("No Client Found",
+                      style: TextStyle(color: Colors.red)),
                   content: const Text(
                       "Make sure you have entered the correct number of the client? Please check and try again."),
                   actions: [
@@ -161,7 +192,6 @@ class _MainScreenState extends State<MainScreen> {
         setState(() {
           loading = false;
         });
-
       }
     });
   }
