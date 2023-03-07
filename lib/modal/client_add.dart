@@ -69,6 +69,8 @@ class _ClientAddState extends State<ClientAdd> {
                   }
                 },
                 decoration: InputDecoration(
+                    counterText: "",
+                    counter: null,
                     filled: true,
                     hintText: "Client Name",
                     prefixIcon: const Icon(Icons.person,
@@ -100,6 +102,8 @@ class _ClientAddState extends State<ClientAdd> {
                   }
                 },
                 decoration: InputDecoration(
+                    counterText: "",
+                    counter: null,
                     filled: true,
                     hintText: "Phone Number",
                     prefixIcon: const Icon(Icons.phone,
@@ -132,6 +136,8 @@ class _ClientAddState extends State<ClientAdd> {
                       },
                       maxLength: 5,
                       decoration: InputDecoration(
+                          counterText: "",
+                          counter: null,
                           filled: true,
                           hintText: "Package",
                           fillColor: Colors.white,
@@ -162,6 +168,8 @@ class _ClientAddState extends State<ClientAdd> {
                       },
                       decoration: InputDecoration(
                           filled: true,
+                          counterText: "",
+                          counter: null,
                           hintText: "Massages",
                           fillColor: Colors.white,
                           border: OutlineInputBorder(
@@ -218,6 +226,8 @@ class _ClientAddState extends State<ClientAdd> {
                   }
                 },
                 decoration: InputDecoration(
+                    counterText: "",
+                    counter: null,
                     filled: true,
                     hintText: "Pending Amount",
                     fillColor: Colors.white,
@@ -257,10 +267,13 @@ class _ClientAddState extends State<ClientAdd> {
         .get()
         .then((value) async {
       if (value.exists) {
+        setState(() {
+          loading = false;
+        });
         showDialog(
             context: context,
             builder: (ctx) => AlertDialog(
-                  title: const Text("Already Registered"),
+                  title: const Text("Already Registered",style: TextStyle(color: Colors.green),),
                   content: const Text("Client is already registered with us."),
                   actions: [
                     TextButton(
@@ -283,17 +296,19 @@ class _ClientAddState extends State<ClientAdd> {
           "registration":
               DateFormat.yMMMd().add_jm().format(timestamp.toDate()),
           "amount": int.parse(amountController.value.text.toString()),
-          "massages": int.parse(massagesController.value.text.toString()),
-          "pendingAmount":
-              int.parse(pendingAmountController.value.text.toString()),
-          "pendingMassage": int.parse(massagesController.value.text.toString()),
+          "massages": massagesController.value.text,
+          "pendingAmount": pendingAmountController.value.text,
+          "pendingMassage": massagesController.value.text,
           "pastServices": []
         }, SetOptions(merge: true)).then((value) => {
+                  setState(() {
+                    loading = false;
+                  }),
                   showDialog(
                       barrierDismissible: false,
                       context: context,
                       builder: (ctx) => AlertDialog(
-                            title: const Text("Package Created"),
+                            title: const Text("Package Created",style: TextStyle(color: Colors.green),),
                             content: const Text(
                                 "Would like to Book Session? or Go Back?."),
                             actions: [
@@ -307,11 +322,13 @@ class _ClientAddState extends State<ClientAdd> {
                                     Navigator.of(context)
                                         .pushReplacement(MaterialPageRoute(
                                       builder: (context) => BookSession(
-                                        number: numberController.value.text
-                                            .toString(),
-                                        clientName: nameController.value.text
-                                            .toString(),
-                                      ),
+                                          number: numberController.value.text
+                                              .toString(),
+                                          clientName: nameController.value.text
+                                              .toString(),
+                                          pendingMassage: int.parse(
+                                              pendingAmountController
+                                                  .value.text)),
                                     ));
                                   },
                                   child: const Text("Book Session"))

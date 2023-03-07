@@ -147,7 +147,7 @@ class _MainScreenState extends State<MainScreen> {
         showDialog(
             context: context,
             builder: (ctx) => AlertDialog(
-                  title: const Text("No Client Found"),
+                  title: const Text("No Client Found",style: TextStyle(color: Colors.red)),
                   content: const Text(
                       "Make sure you have entered the correct number of the client? Please check and try again."),
                   actions: [
