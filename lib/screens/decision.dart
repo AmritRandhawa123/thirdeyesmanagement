@@ -141,7 +141,7 @@ class _DecisionState extends State<Decision> {
                       const SizedBox(
                         height: 80,
                       ),
-                      const Text("Forget you password? Don't worry",style: TextStyle(color: Colors.black54)),
+                      const Text("Forget your password? Don't worry",style: TextStyle(color: Colors.black54)),
                       const SizedBox(height: 10),
                       CupertinoButton(
                         color: Colors.red,

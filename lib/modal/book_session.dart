@@ -4,15 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class BookSession extends StatefulWidget {
-  final String number;
-  final String clientName;
-  final int pendingMassage;
+  final String massageName;
+  final String date;
+  final int duration;
+  final String spaName;
+  final String subHeading;
 
   const BookSession(
       {super.key,
-      required this.number,
-      required this.clientName,
-      required this.pendingMassage});
+      required this.massageName,
+      required this.date,
+      required this.duration,
+      required this.spaName,
+      required this.subHeading});
 
   @override
   State<BookSession> createState() => _BookSessionState();
@@ -22,7 +26,7 @@ class _BookSessionState extends State<BookSession> {
   String manager = FirebaseAuth.instance.currentUser!.email.toString();
   final db = FirebaseFirestore.instance;
   String dropdownValue = list.first;
- late List<dynamic> massagesName;
+  late List<dynamic> massagesName;
   static const List<String> list = <String>[
     'Deep Tissue',
     'Foot Massage',
@@ -30,10 +34,9 @@ class _BookSessionState extends State<BookSession> {
     'Full Body Massage'
   ];
 
-
   @override
   void initState() {
-    check();
+    check(widget.duration);
     super.initState();
   }
 
@@ -54,16 +57,6 @@ class _BookSessionState extends State<BookSession> {
               CircleAvatar(
                   maxRadius: MediaQuery.of(context).size.width / 7,
                   child: Image.asset("assets/business.png")),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 10),
-                  Text(
-                    widget.clientName,
-                    style: const TextStyle(fontSize: 22, fontFamily: "Dosis"),
-                  )
-                ],
-              ),
               const SizedBox(height: 10),
               const Text("Your booking manager"),
               Center(
@@ -121,34 +114,33 @@ class _BookSessionState extends State<BookSession> {
   Future<void> createBooking(String clientNumber, String spaName,
       String massage, double duration) async {
     await FirebaseFirestore.instance.enableNetwork();
-    Timestamp timestamp = Timestamp.now();
     FirebaseFirestore.instance.collection("clients").doc(clientNumber).update({
       "pastServices": FieldValue.arrayUnion([
         {
           "spaName": spaName,
-          "massage": massage,
+          "massageName": massage,
+          "subHeading": "Sub Heading Pending",
           "duration": duration,
-          "Date": DateFormat.yMMMd().add_jm().format(timestamp.toDate()),
-          "bookingManager": manager
+          "Date": DateFormat.yMMMd().add_jm().format(Timestamp.now().toDate()),
         }
       ]),
     });
   }
 
-  void check() {
+  void check(int massageType) {
     db
-        .collection("spaServices")
-        .doc("Heritage Spa")
+        .collection("clients")
+        .doc("9953993916")
         .get()
         .then((DocumentSnapshot documentSnapshot) {
-         massagesName = documentSnapshot.get("allServices");
-         for(int i  = 0; i < massagesName.length; i++){
-           print(massagesName[i]["name"]);
-           print(massagesName[i]["rate"]);
-           print(massagesName[i]["subHeading"]);
-
-         }
-
+      var massages = documentSnapshot.get("pendingMassage");
+      if (massages < massageType) {
+        print("Sorry");
+      } else {
+        var data = massages * 60;
+        var  d = massageType*60;
+        print(data - d);
+      }
     });
   }
 }

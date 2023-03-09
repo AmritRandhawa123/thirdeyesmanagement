@@ -43,13 +43,15 @@ class _ClientAddState extends State<ClientAdd> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: const Color(0xffebf2ff),
       body: SingleChildScrollView(
         child: Column(children: [
           SafeArea(
               child: Stack(alignment: Alignment.center, children: [
-            Image.asset("assets/addClient.png",
-                height: MediaQuery.of(context).size.height / 4),
+            Expanded(
+              child: Image.asset("assets/addForm.png",
+                  height: MediaQuery.of(context).size.height / 4),
+            ),
             loading ? const CircularProgressIndicator() : Container()
           ])),
           Form(
@@ -70,7 +72,7 @@ class _ClientAddState extends State<ClientAdd> {
                 },
                 decoration: InputDecoration(
                     counterText: "",
-                    counter: null,
+
                     filled: true,
                     hintText: "Client Name",
                     prefixIcon: const Icon(Icons.person,
@@ -103,7 +105,7 @@ class _ClientAddState extends State<ClientAdd> {
                 },
                 decoration: InputDecoration(
                     counterText: "",
-                    counter: null,
+
                     filled: true,
                     hintText: "Phone Number",
                     prefixIcon: const Icon(Icons.phone,
@@ -137,7 +139,7 @@ class _ClientAddState extends State<ClientAdd> {
                       maxLength: 5,
                       decoration: InputDecoration(
                           counterText: "",
-                          counter: null,
+
                           filled: true,
                           hintText: "Package",
                           fillColor: Colors.white,
@@ -200,7 +202,7 @@ class _ClientAddState extends State<ClientAdd> {
                 value: _age,
                 min: 18,
                 max: 75,
-                label: _age.round().toString(),
+                label: "${_age.round()} Age",
                 activeColor: Colors.green,
                 inactiveColor: Colors.black54,
                 onChanged: (double value) {
@@ -227,7 +229,7 @@ class _ClientAddState extends State<ClientAdd> {
                 },
                 decoration: InputDecoration(
                     counterText: "",
-                    counter: null,
+
                     filled: true,
                     hintText: "Pending Amount",
                     fillColor: Colors.white,
@@ -291,14 +293,15 @@ class _ClientAddState extends State<ClientAdd> {
             .doc(numberController.value.text.toString())
             .set({
           "name": nameController.value.text.toString().trim(),
-          "age": int.parse(_age.round().toString()),
+          "age": _age.round().toInt(),
+          "member" : true,
           "phone": numberController.value.text.toString(),
           "registration":
               DateFormat.yMMMd().add_jm().format(timestamp.toDate()),
           "amount": int.parse(amountController.value.text.toString()),
-          "massages": massagesController.value.text,
-          "pendingAmount": pendingAmountController.value.text,
-          "pendingMassage": massagesController.value.text,
+          "massages": int.parse(massagesController.value.text),
+          "pendingAmount": int.parse(pendingAmountController.value.text),
+          "pendingMassage": int.parse(massagesController.value.text),
           "pastServices": []
         }, SetOptions(merge: true)).then((value) => {
                   setState(() {
@@ -321,17 +324,17 @@ class _ClientAddState extends State<ClientAdd> {
                                   child: const Text("Go Back")),
                               TextButton(
                                   onPressed: () {
-                                    Navigator.of(ctx)
-                                        .pushReplacement(MaterialPageRoute(
-                                      builder: (context) => BookSession(
-                                          number: numberController.value.text
-                                              .toString(),
-                                          clientName: nameController.value.text
-                                              .toString(),
-                                          pendingMassage: int.parse(
-                                              pendingAmountController
-                                                  .value.text)),
-                                    ));
+                                    // Navigator.of(ctx)
+                                    //     .pushReplacement(MaterialPageRoute(
+                                    //   builder: (context) => BookSession(
+                                    //       number: numberController.value.text
+                                    //           .toString(),
+                                    //       clientName: nameController.value.text
+                                    //           .toString(),
+                                    //       pendingMassage: int.parse(
+                                    //           pendingAmountController
+                                    //               .value.text)),
+                                    // ));
                                   },
                                   child: const Text("Book Session"))
                             ],
