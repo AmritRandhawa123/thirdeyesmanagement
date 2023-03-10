@@ -324,17 +324,11 @@ class _ClientAddState extends State<ClientAdd> {
                                   child: const Text("Go Back")),
                               TextButton(
                                   onPressed: () {
-                                    // Navigator.of(ctx)
-                                    //     .pushReplacement(MaterialPageRoute(
-                                    //   builder: (context) => BookSession(
-                                    //       number: numberController.value.text
-                                    //           .toString(),
-                                    //       clientName: nameController.value.text
-                                    //           .toString(),
-                                    //       pendingMassage: int.parse(
-                                    //           pendingAmountController
-                                    //               .value.text)),
-                                    // ));
+                                    Navigator.of(ctx)
+                                        .pushReplacement(MaterialPageRoute(
+                                      builder: (context) => BookSession(pendingMassages: int.parse(pendingAmountController.value.text),
+                                       ),
+                                    ));
                                   },
                                   child: const Text("Book Session"))
                             ],

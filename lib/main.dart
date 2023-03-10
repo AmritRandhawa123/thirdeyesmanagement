@@ -94,8 +94,8 @@ class MyAppState extends State<MyApp> {
     }
   }
 
-  void moveToHome() {
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
+  Future<void> moveToHome() async {
+   await Navigator.of(context).pushReplacement(MaterialPageRoute(
       builder: (context) => const Home(),
     ));
   }
