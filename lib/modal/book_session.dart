@@ -9,8 +9,9 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class BookSession extends StatefulWidget {
   final int pendingMassages;
+  final int phoneNumber;
 
-  const BookSession({super.key, required this.pendingMassages});
+  const BookSession({super.key, required this.pendingMassages, required this.phoneNumber});
 
   @override
   State<BookSession> createState() => _BookSessionState();
@@ -92,7 +93,7 @@ class _BookSessionState extends State<BookSession> {
                   int sNo = index + 1;
                   return GestureDetector(
                     onTap: (){
-                      print(index);
+                    createBooking(index);
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -144,7 +145,13 @@ class _BookSessionState extends State<BookSession> {
                                       style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontFamily: "Montserrat")),
-                                )
+                                ),
+                                const SizedBox(width: 10),
+                                const Text("Rate : "),
+                                Text(values[index]["rate"].toString(),
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: "Montserrat"))
                               ],
                             ),
                           ),
@@ -241,17 +248,18 @@ class _BookSessionState extends State<BookSession> {
     );
   }
 
-  Future<void> createBooking(String clientNumber, String spaName,
-      String massage, double duration) async {
+  Future<void> createBooking(int index) async {
+
     await FirebaseFirestore.instance.enableNetwork();
-    FirebaseFirestore.instance.collection("clients").doc(clientNumber).update({
+    FirebaseFirestore.instance.collection("clients").doc(widget.phoneNumber.toString()).update({
       "pastServices": FieldValue.arrayUnion([
         {
-          "spaName": spaName,
-          "massageName": massage,
-          "subHeading": "Sub Heading Pending",
-          "duration": duration,
-          "Date": DateFormat.yMMMd().add_jm().format(Timestamp.now().toDate()),
+          "spaName": values[index]["spaName"],
+          "massageName": values[index]["massageName"],
+          "subHeading": values[index]["subHeading"],
+          "duration": values[index]["duration"],
+          "rate": values[index]["rate"],
+          "date": DateFormat.yMMMd().add_jm().format(Timestamp.now().toDate()),
         }
       ]),
     });

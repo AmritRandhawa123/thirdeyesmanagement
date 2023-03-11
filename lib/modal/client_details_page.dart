@@ -1,8 +1,6 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-
 
 import 'book_session.dart';
 
@@ -38,6 +36,7 @@ class ClientAddDetails extends StatefulWidget {
 class _ClientAddDetailsState extends State<ClientAddDetails> {
   bool loaded = false;
   final pc = PanelController();
+
   @override
   Widget build(BuildContext context) {
     final double panelHeightClosed = MediaQuery.of(context).size.height / 3.5;
@@ -50,10 +49,9 @@ class _ClientAddDetailsState extends State<ClientAddDetails> {
         alignment: Alignment.topCenter,
         children: <Widget>[
           GestureDetector(
-            onTap: (){
+            onTap: () {
               pc.open();
             },
-
             child: SlidingUpPanel(
               onPanelClosed: () {
                 pc.close();
@@ -77,7 +75,6 @@ class _ClientAddDetailsState extends State<ClientAddDetails> {
   }
 
   Widget _panel(ScrollController sc) {
-
     return MediaQuery.removePadding(
         context: context,
         removeTop: true,
@@ -85,7 +82,6 @@ class _ClientAddDetailsState extends State<ClientAddDetails> {
             ? Column(
                 children: [
                   const SizedBox(height: 5),
-
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
@@ -180,7 +176,7 @@ class _ClientAddDetailsState extends State<ClientAddDetails> {
                               const Text(
                                 "Duration : ",
                               ),
-                              Text(widget.pastServices[index]["duration"],
+                              Text(widget.pastServices[index]["duration"].toString(),
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontFamily: "Montserrat")),
@@ -256,7 +252,8 @@ class _ClientAddDetailsState extends State<ClientAddDetails> {
                           fontSize: 18,
                           fontFamily: "Montserrat")))),
           const SizedBox(height: 20),
-          const Text("Registration", style: TextStyle(fontSize: 16,color: Colors.white60)),
+          const Text("Registration",
+              style: TextStyle(fontSize: 16, color: Colors.white60)),
           const SizedBox(height: 5),
           Text(
             widget.registration,
@@ -305,8 +302,8 @@ class _ClientAddDetailsState extends State<ClientAddDetails> {
                     const Text("Massages:",
                         style: TextStyle(color: Colors.white)),
                     Text(widget.massages.toString(),
-                        style: const TextStyle(
-                            fontSize: 22, color: Colors.white)),
+                        style:
+                            const TextStyle(fontSize: 22, color: Colors.white)),
                   ],
                 ),
                 const SizedBox(
@@ -325,8 +322,8 @@ class _ClientAddDetailsState extends State<ClientAddDetails> {
                     const Text("Massages Left: ",
                         style: TextStyle(color: Colors.white)),
                     Text(widget.pendingMassage.toString(),
-                        style: const TextStyle(
-                            fontSize: 22, color: Colors.white))
+                        style:
+                            const TextStyle(fontSize: 22, color: Colors.white))
                   ],
                 ),
               ],
@@ -356,8 +353,10 @@ class _ClientAddDetailsState extends State<ClientAddDetails> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => BookSession(pendingMassages: widget.pendingMassage),
-                    ));
+                        builder: (context) => BookSession(
+                              pendingMassages: widget.pendingMassage,
+                              phoneNumber: int.parse(widget.phoneNumber),
+                            )));
               }
             },
             child: const Text("Book Session"),

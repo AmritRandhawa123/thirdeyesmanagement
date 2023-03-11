@@ -72,7 +72,6 @@ class _ClientAddState extends State<ClientAdd> {
                 },
                 decoration: InputDecoration(
                     counterText: "",
-
                     filled: true,
                     hintText: "Client Name",
                     prefixIcon: const Icon(Icons.person,
@@ -105,7 +104,6 @@ class _ClientAddState extends State<ClientAdd> {
                 },
                 decoration: InputDecoration(
                     counterText: "",
-
                     filled: true,
                     hintText: "Phone Number",
                     prefixIcon: const Icon(Icons.phone,
@@ -139,7 +137,6 @@ class _ClientAddState extends State<ClientAdd> {
                       maxLength: 5,
                       decoration: InputDecoration(
                           counterText: "",
-
                           filled: true,
                           hintText: "Package",
                           fillColor: Colors.white,
@@ -229,7 +226,6 @@ class _ClientAddState extends State<ClientAdd> {
                 },
                 decoration: InputDecoration(
                     counterText: "",
-
                     filled: true,
                     hintText: "Pending Amount",
                     fillColor: Colors.white,
@@ -275,7 +271,10 @@ class _ClientAddState extends State<ClientAdd> {
         showDialog(
             context: context,
             builder: (ctx) => AlertDialog(
-                  title: const Text("Already Registered",style: TextStyle(color: Colors.green),),
+                  title: const Text(
+                    "Already Registered",
+                    style: TextStyle(color: Colors.green),
+                  ),
                   content: const Text("Client is already registered with us."),
                   actions: [
                     TextButton(
@@ -294,7 +293,7 @@ class _ClientAddState extends State<ClientAdd> {
             .set({
           "name": nameController.value.text.toString().trim(),
           "age": _age.round().toInt(),
-          "member" : true,
+          "member": true,
           "phone": numberController.value.text.toString(),
           "registration":
               DateFormat.yMMMd().add_jm().format(timestamp.toDate()),
@@ -311,23 +310,28 @@ class _ClientAddState extends State<ClientAdd> {
                       barrierDismissible: false,
                       context: context,
                       builder: (ctx) => AlertDialog(
-                            title: const Text("Package Created",style: TextStyle(color: Colors.green),),
+                            title: const Text(
+                              "Package Created",
+                              style: TextStyle(color: Colors.green),
+                            ),
                             content: const Text(
                                 "Would like to Book Session? or Go Back?."),
                             actions: [
                               TextButton(
                                   onPressed: () {
-                                   Navigator.pop(ctx);
-                                   Navigator.pop(context);
-
+                                    Navigator.pop(ctx);
+                                    Navigator.pop(context);
                                   },
                                   child: const Text("Go Back")),
                               TextButton(
                                   onPressed: () {
                                     Navigator.of(ctx)
                                         .pushReplacement(MaterialPageRoute(
-                                      builder: (context) => BookSession(pendingMassages: int.parse(pendingAmountController.value.text),
-                                       ),
+                                      builder: (context) => BookSession(
+                                        pendingMassages: int.parse(
+                                            pendingAmountController.value.text),
+                                        phoneNumber: int.parse(numberController.value.text),
+                                      ),
                                     ));
                                   },
                                   child: const Text("Book Session"))
@@ -345,6 +349,4 @@ class _ClientAddState extends State<ClientAdd> {
       _createDatabase();
     }
   }
-
-
 }

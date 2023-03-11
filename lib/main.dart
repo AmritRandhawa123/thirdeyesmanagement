@@ -95,8 +95,11 @@ class MyAppState extends State<MyApp> {
   }
 
   Future<void> moveToHome() async {
-   await Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) => const Home(),
-    ));
+    if(mounted){
+      await Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (context) => const Home(),
+      ));
+    }
+
   }
 }
