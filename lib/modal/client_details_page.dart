@@ -172,14 +172,31 @@ class _ClientAddDetailsState extends State<ClientAddDetails> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              const Text(
-                                "Duration : ",
+                              Row(
+                                children: [
+                                  const Text(
+                                    "Duration : ",
+                                  ),
+                                  Text("${widget.pastServices[index]["duration"]} Minutes",
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: "Montserrat")),
+                                ],
                               ),
-                              Text(widget.pastServices[index]["duration"].toString(),
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: "Montserrat")),
+
+                              Row(
+                                children: [
+                                  const Text(
+                                    "Rate : ",
+                                  ),
+                                  Text("Rs. ${widget.pastServices[index]["rate"]}",
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: "Montserrat")),
+                                ],
+                              ),
                             ],
                           ),
                         )

@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:visibility_detector/visibility_detector.dart';
+import 'package:thirdeyesmanagement/modal/test.dart';
 
 import 'package:intl/intl.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -11,7 +12,8 @@ class BookSession extends StatefulWidget {
   final int pendingMassages;
   final int phoneNumber;
 
-  const BookSession({super.key, required this.pendingMassages, required this.phoneNumber});
+  const BookSession(
+      {super.key, required this.pendingMassages, required this.phoneNumber});
 
   @override
   State<BookSession> createState() => _BookSessionState();
@@ -19,6 +21,7 @@ class BookSession extends StatefulWidget {
 
 class _BookSessionState extends State<BookSession> {
   late List<dynamic> values;
+  late List<dynamic> finalize = [];
 
   // Initial Selected Value
   String dropDownValue = 'Choose Spa';
@@ -37,7 +40,9 @@ class _BookSessionState extends State<BookSession> {
 
   bool fetched = false;
 
-  final pc = PanelController();
+  final PanelController _pc1 = PanelController();
+  final PanelController _pc2 = PanelController();
+  bool _visible = true;
   double panelHeightClosed = 0;
 
   @override
@@ -52,31 +57,54 @@ class _BookSessionState extends State<BookSession> {
     super.dispose();
   }
 
+  late int ind;
+
   @override
   Widget build(BuildContext context) {
-    var panelHeightOpen = MediaQuery.of(context).size.height - 200;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xff2b6747),
       body: Stack(
         alignment: Alignment.topCenter,
         children: <Widget>[
-          SlidingUpPanel(
-            maxHeight: panelHeightOpen,
-            minHeight: panelHeightClosed,
-            parallaxEnabled: true,
-            parallaxOffset: .5,
-            body: _body(),
-            controller: pc,
-            panelBuilder: (sc) => _panel(sc),
-            borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(18.0),
-                topRight: Radius.circular(18.0)),
+          Visibility(
+            maintainState: true,
+            maintainAnimation: true,
+            visible: _visible,
+            child: SlidingUpPanel(
+              minHeight: panelHeightClosed,
+              parallaxEnabled: true,
+              parallaxOffset: .5,
+              body: _body(),
+              controller: _pc1,
+              panelBuilder: (sc) => _panel(sc),
+              borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(18.0),
+                  topRight: Radius.circular(18.0)),
+            ),
+          ),
+          Visibility(
+            maintainState: true,
+            maintainAnimation: true,
+            visible: !_visible,
+            child: SlidingUpPanel(
+              minHeight: panelHeightClosed,
+              parallaxEnabled: true,
+              parallaxOffset: .5,
+              body: _body(),
+              controller: _pc2,
+              panelBuilder: (sc) => _panel2(sc),
+              borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(18.0),
+                  topRight: Radius.circular(18.0)),
+            ),
           ),
         ],
       ),
     );
   }
+
+
 
   Widget _panel(ScrollController sc) {
     return MediaQuery.removePadding(
@@ -84,16 +112,18 @@ class _BookSessionState extends State<BookSession> {
         removeTop: true,
         child: fetched
             ? ListView.separated(
-
                 itemCount: values.length,
                 separatorBuilder: (BuildContext context, int index) =>
                     const Divider(thickness: 5),
                 itemBuilder: (BuildContext context, int index) {
-
                   int sNo = index + 1;
                   return GestureDetector(
-                    onTap: (){
+                    onTap: () {
                     createBooking(index);
+                      _pc1.close();
+                      _visible = false;
+                      setState(() {});
+                      _pc2.open();
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -102,7 +132,6 @@ class _BookSessionState extends State<BookSession> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-
                           const SizedBox(height: 20),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
@@ -180,10 +209,64 @@ class _BookSessionState extends State<BookSession> {
             : Container());
   }
 
+  Widget _panel2(ScrollController sc) {
+    return MediaQuery.removePadding(
+        context: context,
+        removeTop: true,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              CupertinoButton(
+                color: Colors.redAccent[100],
+                onPressed: () {
+                  _pc2.close();
+                  _visible = true;
+                  setState(() {});
+                  _pc1.open();
+                },
+                child: const Text("Add More")
+              ),
+              ListView.separated(
+                itemCount: finalize.length,
+                separatorBuilder: (BuildContext context, int index) =>
+                    const Divider(thickness: 5),
+                itemBuilder: (BuildContext context, int index) {
+                  return Column(
+                    children: [
+                      Text(finalize[index]["spaName"]),
+                      Text(finalize[index]["massageName"]),
+                    ],
+                  );
+                },
+                shrinkWrap: true,
+                physics: const BouncingScrollPhysics(),
+              ),
+              CupertinoButton(
+                color: CupertinoColors.activeGreen,
+                onPressed: () {},
+                child: const Text("Confirm Booking"),
+              )
+            ],
+          ),
+        ));
+  }
+
   Widget _body() {
     return Scaffold(
       body: SafeArea(
         child: Column(children: [
+          const SizedBox(height: 20),
+          Column(
+            children: [
+              const Text("Booking Manager", style: TextStyle(fontSize: 18)),
+              Text(manager,
+                  style: const TextStyle(
+                    fontFamily: "Montserrat",
+                    fontWeight: FontWeight.w500,
+                  )),
+            ],
+          ),
           Card(
             margin: const EdgeInsets.all(30),
             child: SizedBox(
@@ -203,7 +286,10 @@ class _BookSessionState extends State<BookSession> {
                   // change button value to selected value
                   onChanged: (String? newValue) {
                     if (newValue == "Choose Spa") {
-                      return;
+                      setState(() {
+                        dropDownValue = newValue!;
+                      });
+                      panelHeightClosed = 0;
                     } else {
                       check(newValue!);
                       setState(() {
@@ -218,14 +304,6 @@ class _BookSessionState extends State<BookSession> {
           const SizedBox(
             height: 30,
           ),
-          Column(
-            children: [
-              const Text("Booking Manager",style: TextStyle(fontSize: 18)),
-              Text(manager,
-                  style: const TextStyle(
-                      fontFamily: "Montserrat", fontWeight: FontWeight.w500,)),
-            ],
-          ),
           Container(
             margin: const EdgeInsets.only(left: 15, right: 15),
             alignment: Alignment.center,
@@ -234,7 +312,14 @@ class _BookSessionState extends State<BookSession> {
               child: SizedBox(
                 width: 320,
                 height: 320,
-                child: Flexible(
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const Test(title: "Hello"),
+                        ));
+                  },
                   child: Image.asset(
                     "assets/booking.png",
                     fit: BoxFit.cover,
@@ -249,17 +334,19 @@ class _BookSessionState extends State<BookSession> {
   }
 
   Future<void> createBooking(int index) async {
-
+    finalize.add(index+1);
     await FirebaseFirestore.instance.enableNetwork();
-    FirebaseFirestore.instance.collection("clients").doc(widget.phoneNumber.toString()).update({
-      "pastServices": FieldValue.arrayUnion([
+    FirebaseFirestore.instance
+        .collection("cache")
+        .doc("data")
+        .update({
+      "service": FieldValue.arrayUnion([
         {
           "spaName": values[index]["spaName"],
           "massageName": values[index]["massageName"],
           "subHeading": values[index]["subHeading"],
           "duration": values[index]["duration"],
           "rate": values[index]["rate"],
-          "date": DateFormat.yMMMd().add_jm().format(Timestamp.now().toDate()),
         }
       ]),
     });
@@ -274,7 +361,7 @@ class _BookSessionState extends State<BookSession> {
           .then((DocumentSnapshot documentSnapshot) {
         if (documentSnapshot.exists) {
           values = documentSnapshot.get("service");
-          pc.open();
+
           panelHeightClosed = MediaQuery.of(context).size.height / 3.5;
           setState(() {
             fetched = true;
@@ -287,6 +374,7 @@ class _BookSessionState extends State<BookSession> {
     }
   }
 }
+
 class ClipPathClass extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
