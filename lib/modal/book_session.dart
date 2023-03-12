@@ -3,9 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:thirdeyesmanagement/modal/test.dart';
-
-import 'package:intl/intl.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class BookSession extends StatefulWidget {
@@ -21,12 +18,10 @@ class BookSession extends StatefulWidget {
 
 class _BookSessionState extends State<BookSession> {
   late List<dynamic> values;
-  late List<dynamic> finalize = [];
+  List<dynamic> finalize = [];
 
-  // Initial Selected Value
   String dropDownValue = 'Choose Spa';
 
-  // List of items in our dropdown menu
   var items = [
     'Choose Spa',
     'Heritage Spa',
@@ -44,6 +39,8 @@ class _BookSessionState extends State<BookSession> {
   final PanelController _pc2 = PanelController();
   bool _visible = true;
   double panelHeightClosed = 0;
+
+  bool loaded = false;
 
   @override
   void initState() {
@@ -104,8 +101,6 @@ class _BookSessionState extends State<BookSession> {
     );
   }
 
-
-
   Widget _panel(ScrollController sc) {
     return MediaQuery.removePadding(
         context: context,
@@ -118,8 +113,8 @@ class _BookSessionState extends State<BookSession> {
                 itemBuilder: (BuildContext context, int index) {
                   int sNo = index + 1;
                   return GestureDetector(
-                    onTap: () {
-                    createBooking(index);
+                    onTap: () async {
+                      await addCart(index);
                       _pc1.close();
                       _visible = false;
                       setState(() {});
@@ -217,26 +212,53 @@ class _BookSessionState extends State<BookSession> {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              CupertinoButton(
-                color: Colors.redAccent[100],
-                onPressed: () {
-                  _pc2.close();
-                  _visible = true;
-                  setState(() {});
-                  _pc1.open();
-                },
-                child: const Text("Add More")
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                      onPressed: () {
+                        _pc2.close();
+                        _visible = true;
+                        setState(() {});
+                        _pc1.open();
+                      },
+                      child: Row(
+                        children: const [
+                          Icon(
+                            Icons.add,
+                            color: Colors.green,
+                          ),
+                          Text("Add More"),
+                        ],
+                      )),
+                ],
               ),
               ListView.separated(
                 itemCount: finalize.length,
                 separatorBuilder: (BuildContext context, int index) =>
                     const Divider(thickness: 5),
                 itemBuilder: (BuildContext context, int index) {
-                  return Column(
-                    children: [
-                      Text(finalize[index]["spaName"]),
-                      Text(finalize[index]["massageName"]),
-                    ],
+                  return Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(finalize[index]["massageName"],
+                            style: const TextStyle(
+                                fontFamily: "Montserrat",
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold)),
+                        GestureDetector(
+                          onTap: (){
+                            .document('docID').updateData('': FieldValue.arrayRemove([{0}]));
+                          },
+                          child: const Icon(
+                            Icons.remove_circle_outlined,
+                            color: Colors.redAccent,
+                          ),
+                        )
+                      ],
+                    ),
                   );
                 },
                 shrinkWrap: true,
@@ -312,18 +334,9 @@ class _BookSessionState extends State<BookSession> {
               child: SizedBox(
                 width: 320,
                 height: 320,
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const Test(title: "Hello"),
-                        ));
-                  },
-                  child: Image.asset(
-                    "assets/booking.png",
-                    fit: BoxFit.cover,
-                  ),
+                child: Image.asset(
+                  "assets/booking.png",
+                  fit: BoxFit.cover,
                 ),
               ),
             ),
@@ -334,12 +347,8 @@ class _BookSessionState extends State<BookSession> {
   }
 
   Future<void> createBooking(int index) async {
-    finalize.add(index+1);
-    await FirebaseFirestore.instance.enableNetwork();
-    FirebaseFirestore.instance
-        .collection("cache")
-        .doc("data")
-        .update({
+    await db.enableNetwork();
+    db.collection("cache").doc("data").update({
       "service": FieldValue.arrayUnion([
         {
           "spaName": values[index]["spaName"],
@@ -349,6 +358,34 @@ class _BookSessionState extends State<BookSession> {
           "rate": values[index]["rate"],
         }
       ]),
+    });
+  }
+
+  Future<void> addCart(int index) async {
+    await db.enableNetwork();
+    db.collection("clients").doc(widget.phoneNumber.toString()).update({
+      "cart": FieldValue.arrayUnion([
+        {
+          "spaName": values[index]["spaName"],
+          "massageName": values[index]["massageName"],
+          "subHeading": values[index]["subHeading"],
+          "duration": values[index]["duration"],
+          "rate": values[index]["rate"],
+        }
+      ]),
+    });
+
+    await db
+        .collection("clients")
+        .doc(widget.phoneNumber.toString())
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        finalize = documentSnapshot.get("cart");
+        setState(() {
+          loaded = true;
+        });
+      }
     });
   }
 

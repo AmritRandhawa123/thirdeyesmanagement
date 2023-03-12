@@ -70,6 +70,7 @@ class MyAppState extends State<MyApp> {
         //   builder: (context) => const UserDisabled(),
         // ));
       }
+      print(e.code);
     }
   }
 
