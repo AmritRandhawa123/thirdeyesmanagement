@@ -44,7 +44,6 @@ class _BookSessionState extends State<BookSession> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -250,7 +249,7 @@ class _BookSessionState extends State<BookSession> {
                                 fontWeight: FontWeight.bold)),
                         GestureDetector(
                           onTap: (){
-                            .document('docID').updateData('': FieldValue.arrayRemove([{0}]));
+                            // .document('docID').updateData('': FieldValue.arrayRemove([{0}]));
                           },
                           child: const Icon(
                             Icons.remove_circle_outlined,

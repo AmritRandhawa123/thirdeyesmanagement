@@ -33,10 +33,18 @@ class _DecisionState extends State<Decision> {
             builder:
                 (BuildContext context, BoxConstraints viewportConstraints) {
               return SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
-                      Image.asset("assets/emailPassword.png"),
+                      const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text("Welcome, Manager's",style: TextStyle(color: Colors.blue,fontSize: 22,fontFamily: "Montserrat",fontWeight: FontWeight.bold),),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Image.asset("assets/emailPassword.png"),
+                      ),
 
                       Column(
                         children: [
@@ -135,7 +143,7 @@ class _DecisionState extends State<Decision> {
                               : () {
                             _authenticateUser();
                           },
-                          child: const Text("Proceed",
+                          child: const Text("Login",
                               style: TextStyle(
                                   color: Colors.white))),
                       const SizedBox(

@@ -5,13 +5,23 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:thirdeyesmanagement/screens/decision.dart';
 import 'package:thirdeyesmanagement/screens/getting_started_screen.dart';
 import 'package:thirdeyesmanagement/screens/home.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await FirebaseAppCheck.instance.activate(
+    webRecaptchaSiteKey: 'recaptcha-v3-site-key',
+    // Default provider for Android is the Play Integrity provider. You can use the "AndroidProvider" enum to choose
+    // your preferred provider. Choose from:
+    // 1. debug provider
+    // 2. safety net provider
+    // 3. play integrity provider
+    androidProvider: AndroidProvider.playIntegrity,
+  );
+
   runApp(const MaterialApp(home: MyApp()));
 }
-
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
